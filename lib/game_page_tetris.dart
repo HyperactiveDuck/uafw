@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:uafw/game/tetris.dart';
 import 'package:uafw/tetris.dart';
 
 class GamePageTetris extends StatefulWidget {
@@ -27,7 +26,7 @@ class _GamePageTetrisState extends State<GamePageTetris> {
       ),
       body: Column(
         children: [
-          Expanded(
+          const Expanded(
             child: App(),
           ),
           Container(
