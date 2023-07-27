@@ -13,8 +13,10 @@ dependencies:
   footer: ^0.0.4
   open_filex: ^4.3.2
   page_transition: ^2.0.9
+  provider: ^6.0.5
   rflutter_alert: ^2.0.7
   url_launcher: ^6.1.12
+  flutter_hooks: ^0.18.0
 
 dev_dependencies:
   flutter_test:

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:uafw/allert.dart';
 import 'package:uafw/forgot_password.dart';
-import 'package:uafw/game_page.dart';
 import 'package:uafw/signup_screen.dart';
 import 'widgets/registiry_text_input.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -96,35 +95,13 @@ class _LoginPageState extends State<LoginPage> {
           ),
           TextButton(
             onPressed: () {
-              Alert(
-                style: const AlertStyle(
-                    backgroundColor: Color.fromRGBO(134, 134, 134, 1)),
-                context: context,
-                desc:
-                    "Karşınıza çıkacak oyunu oynamak için 15 dakika süreniz olacak.\n Süre bitiminde oyun otomatik olarak sonlanacaktır.",
-                buttons: [
-                  DialogButton(
-                    color: const Color.fromRGBO(27, 97, 89, 1),
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          PageTransition(
-                            type: PageTransitionType.fade,
-                            childCurrent: const LoginPage(),
-                            child: const GamePage(),
-                          ));
-                    },
-                    width: 120,
-                    child: const Text(
-                      "Teşekkürler",
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
-                  )
-                ],
-              ).show();
+              Navigator.push(
+                  context,
+                  PageTransition(
+                    type: PageTransitionType.fade,
+                    childCurrent: const LoginPage(),
+                    child: const GameInfo(),
+                  ));
             },
             style: ButtonStyle(
               fixedSize: MaterialStateProperty.all(const Size(200, 30)),

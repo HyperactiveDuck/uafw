@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:uafw/game/tetris.dart';
+import 'package:uafw/tetris.dart';
 
-class GamePage extends StatefulWidget {
-  const GamePage({super.key});
+class GamePageTetris extends StatefulWidget {
+  const GamePageTetris({super.key});
 
   @override
-  State<GamePage> createState() => _GamePageState();
+  State<GamePageTetris> createState() => _GamePageTetrisState();
 }
 
-class _GamePageState extends State<GamePage> {
-  String gameName = 'Oyun İsmi';
+class _GamePageTetrisState extends State<GamePageTetris> {
+  String gameName = 'Tetris';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 87, 104, 117),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: const Color.fromARGB(255, 40, 48, 54),
         centerTitle: true,
         title: Text(
@@ -24,13 +27,8 @@ class _GamePageState extends State<GamePage> {
       ),
       body: Column(
         children: [
-          Container(
-            width: 600,
-            height: 677,
-            color: Colors.red,
-            child: const Center(
-              child: Text('Oyun'),
-            ),
+          Expanded(
+            child: App(),
           ),
           Container(
             height: 50,

@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:uafw/snakegame.dart';
 
-class GamePage extends StatefulWidget {
-  const GamePage({super.key});
+class GamePageSnake extends StatefulWidget {
+  const GamePageSnake({super.key});
 
   @override
-  State<GamePage> createState() => _GamePageState();
+  State<GamePageSnake> createState() => _GamePageSnakeState();
 }
 
-class _GamePageState extends State<GamePage> {
-  String gameName = 'Oyun İsmi';
+class _GamePageSnakeState extends State<GamePageSnake> {
+  String gameName = 'Yılan Oyunu';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 87, 104, 117),
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: const Color.fromARGB(255, 40, 48, 54),
         centerTitle: true,
         title: Text(
@@ -28,13 +30,10 @@ class _GamePageState extends State<GamePage> {
             flex: 12,
             child: Center(
               child: Container(
-                width: 600,
-                height: 855,
-                color: Colors.red,
-                child: const Text(
-                  'Oyun',
-                ),
-              ),
+                  width: 600,
+                  height: 855,
+                  color: Colors.red,
+                  child: const SnakeGame()),
             ),
           ),
           Expanded(
