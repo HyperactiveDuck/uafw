@@ -76,7 +76,7 @@ class _RegisterPageState extends State<RegisterPage> {
           Container(
             height: 45,
           ),
-          Column(
+          const Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -84,14 +84,14 @@ class _RegisterPageState extends State<RegisterPage> {
                 fieldType: FormFieldType.Name,
                 formWidth: 250,
               ),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
               FormValidation(
                 fieldType: FormFieldType.Email,
                 formWidth: 250,
               ),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
               FormValidation(
@@ -137,13 +137,13 @@ class _RegisterPageState extends State<RegisterPage> {
           TextButton(
               onPressed: () {
                 Alert(
-                  style: AlertStyle(
+                  style: const AlertStyle(
                       backgroundColor: Color.fromRGBO(57, 210, 192, 1)),
                   context: context,
                   desc: "Hesabınız oluşturuldu",
                   buttons: [
                     DialogButton(
-                      color: Color.fromRGBO(27, 97, 89, 1),
+                      color: const Color.fromRGBO(27, 97, 89, 1),
                       onPressed: () => Navigator.pop(context),
                       width: 120,
                       child: const Text(

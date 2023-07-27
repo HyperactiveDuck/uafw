@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             height: 45,
           ),
-          Column(
+          const Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -82,7 +82,7 @@ class _LoginPageState extends State<LoginPage> {
                 fieldType: FormFieldType.Email,
                 formWidth: 250,
               ),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
               FormValidation(
@@ -97,14 +97,14 @@ class _LoginPageState extends State<LoginPage> {
           TextButton(
             onPressed: () {
               Alert(
-                style: AlertStyle(
+                style: const AlertStyle(
                     backgroundColor: Color.fromRGBO(134, 134, 134, 1)),
                 context: context,
                 desc:
                     "Karşınıza çıkacak oyunu oynamak için 15 dakika süreniz olacak.\n Süre bitiminde oyun otomatik olarak sonlanacaktır.",
                 buttons: [
                   DialogButton(
-                    color: Color.fromRGBO(27, 97, 89, 1),
+                    color: const Color.fromRGBO(27, 97, 89, 1),
                     onPressed: () {
                       Navigator.push(
                           context,

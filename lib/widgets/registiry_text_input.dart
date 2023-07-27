@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names, use_key_in_widget_constructors, library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 
 enum FormFieldType {
@@ -10,7 +12,7 @@ class FormValidation extends StatefulWidget {
   final FormFieldType fieldType;
   final double formWidth;
 
-  FormValidation({required this.fieldType, required this.formWidth});
+  const FormValidation({required this.fieldType, required this.formWidth});
 
   @override
   _FormValidationState createState() => _FormValidationState();
@@ -103,7 +105,7 @@ class _FormValidationState extends State<FormValidation> {
             obscureText: widget.fieldType == FormFieldType.Password,
             textAlign: TextAlign.center,
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
         ],
       ),
     );
