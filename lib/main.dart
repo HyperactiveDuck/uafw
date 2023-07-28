@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:uafw/snake_controls_guilde.dart';
 import 'login.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
-  runApp(const MainApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  runApp(MainApp());
 }
 
 class MainApp extends StatelessWidget {

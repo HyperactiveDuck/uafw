@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "471832145333",
+    "firebase_url": "https://umut-ocak-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "umut-ocak",
+    "storage_bucket": "umut-ocak.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:471832145333:android:3045ec9b225aa836f63dfc",
+        "android_client_info": {
+          "package_name": "com.example.uafw"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "471832145333-e90dvbrn8f8eorm45pht0l09r6aftvaj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBnPqyNxsru2zqm8nDQv6EqsFPofpKgxdk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "471832145333-e90dvbrn8f8eorm45pht0l09r6aftvaj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

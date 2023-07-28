@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:uafw/allert.dart';
 import 'package:uafw/forgot_password.dart';
 import 'package:uafw/signup_screen.dart';
-import 'widgets/registiry_text_input.dart';
+import 'widgets/registiry_text_input_login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,6 +15,47 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  String _getEmail() {
+    return _emailController.text;
+  }
+
+  String _getPassword() {
+    return _passwordController.text;
+  }
+
+  void _showErrorAlert(String errorMessage) {
+    Alert(
+      style: const AlertStyle(backgroundColor: Color.fromRGBO(57, 210, 192, 1)),
+      context: context,
+      desc: errorMessage,
+      buttons: [
+        DialogButton(
+          color: const Color.fromRGBO(27, 97, 89, 1),
+          onPressed: () => Navigator.pop(context),
+          width: 120,
+          child: const Text(
+            "Tamam",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        )
+      ],
+    ).show();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,18 +116,20 @@ class _LoginPageState extends State<LoginPage> {
           Container(
             height: 45,
           ),
-          const Column(
+          Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FormValidation(
+                controller: _emailController,
                 fieldType: FormFieldType.Email,
                 formWidth: 250,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               FormValidation(
+                controller: _passwordController,
                 fieldType: FormFieldType.Password,
                 formWidth: 250,
               ),
@@ -94,14 +139,32 @@ class _LoginPageState extends State<LoginPage> {
             height: 20,
           ),
           TextButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  PageTransition(
-                    type: PageTransitionType.fade,
-                    childCurrent: const LoginPage(),
-                    child: const GameInfo(),
-                  ));
+            onPressed: () async {
+              try {
+                final String email = _getEmail();
+                final String password = _getPassword();
+                final authResult =
+                    await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: email,
+                  password: password,
+                );
+
+                // Check if the user is signed in (authResult.user will be not null)
+                if (authResult.user != null) {
+                  // Navigate to the next screen after successful login
+                  // For example, replace 'NextScreen()' with the widget of the screen you want to navigate to.
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => GameInfo()),
+                  );
+                } else {
+                  // Handle the case when authResult.user is null (shouldn't happen in this case)
+                  _showErrorAlert("Login failed. Please try again.");
+                }
+              } catch (e) {
+                // Handle errors during login
+                _showErrorAlert(e.toString());
+              }
             },
             style: ButtonStyle(
               fixedSize: MaterialStateProperty.all(const Size(200, 30)),

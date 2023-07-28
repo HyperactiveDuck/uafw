@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'game_page_snake.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:uafw/game_page_tetris.dart';
 
 class SnakeController extends StatefulWidget {
   const SnakeController({super.key});
@@ -27,7 +26,7 @@ class _SnakeControllerState extends State<SnakeController> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Yılanı yön tuşlarıyla kontrol edebilirsiniz \nYılan duvarlardan geçemez , duvaralara değdiniz an oyun biter. \nYılan kendi kuyruğuna değemez , değdiğ an oyun biter.\nYılan yalnızca oyunun başında gittiği yönün tersine dönebilir , ilk yemi yedikten sonra birdaha 180° dönüş yapamaz ',
                       textAlign: TextAlign.center,
                       style: TextStyle(
@@ -48,13 +47,13 @@ class _SnakeControllerState extends State<SnakeController> {
                               child: const GamePageSnake(),
                             ));
                       },
-                      child: Text(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.teal),
+                      ),
+                      child: const Text(
                         'Başla',
                         textAlign: TextAlign.center,
                         style: TextStyle(color: Colors.white, fontSize: 30),
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(Colors.teal),
                       ),
                     )
                   ],

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'game_page_snake.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:uafw/game_page_tetris.dart';
 
@@ -22,7 +21,7 @@ class TetrisControllerState extends State<TetrisController> {
             children: [
               Title(
                   color: Colors.black,
-                  child: Text(
+                  child: const Text(
                     'Tetris Oyunu',
                     style: TextStyle(
                         fontSize: 50,
