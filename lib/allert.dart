@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:uafw/game_page_tetris.dart';
 import 'package:uafw/tetris_controls_guilde.dart';
-import 'snake_controls_guilde.dart';
 
 class GameInfo extends StatefulWidget {
   const GameInfo({super.key});

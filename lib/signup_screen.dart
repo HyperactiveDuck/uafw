@@ -1,24 +1,14 @@
-// ignore_for_file: avoid_web_libraries_in_flutter
-
 import 'package:flutter/material.dart';
-import 'package:uafw/widgets/registiry_text_input_login.dart';
 import 'package:page_transition/page_transition.dart';
-import 'dart:html' as html;
-import 'login.dart';
+import 'package:uafw/widgets/registiry_text_input_login.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:html' as html;
+
+import 'login.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
-  String _getEmail() {
-    // Replace this with the logic to get the email from the form field.
-    return "example@example.com";
-  }
-
-  String _getPassword() {
-    // Replace this with the logic to get the password from the form field.
-    return "your_password";
-  }
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
@@ -97,6 +87,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    bool isCheckboxChecked = checkBoxChecked;
+
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 40, 48, 54),
       body: Column(
@@ -123,12 +115,13 @@ class _RegisterPageState extends State<RegisterPage> {
                       setState(
                         () {
                           Navigator.push(
-                              context,
-                              PageTransition(
-                                type: PageTransitionType.fade,
-                                childCurrent: const RegisterPage(),
-                                child: const LoginPage(),
-                              ));
+                            context,
+                            PageTransition(
+                              type: PageTransitionType.fade,
+                              childCurrent: const RegisterPage(),
+                              child: const LoginPage(),
+                            ),
+                          );
                         },
                       );
                     },
@@ -137,16 +130,17 @@ class _RegisterPageState extends State<RegisterPage> {
                     width: 10,
                   ),
                   ChoiceChip(
-                      selectedColor: const Color.fromRGBO(57, 210, 192, 1),
-                      surfaceTintColor: Colors.teal,
-                      avatar: const Icon(Icons.person_add_rounded),
-                      label: const Text('Kayıt Ol'),
-                      selected: true,
-                      onSelected: (bool value) {
-                        setState(
-                          () {},
-                        );
-                      }),
+                    selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+                    surfaceTintColor: Colors.teal,
+                    avatar: const Icon(Icons.person_add_rounded),
+                    label: const Text('Kayıt Ol'),
+                    selected: true,
+                    onSelected: (bool value) {
+                      setState(
+                        () {},
+                      );
+                    },
+                  ),
                 ],
               )
             ],
@@ -201,33 +195,36 @@ class _RegisterPageState extends State<RegisterPage> {
                     color: Colors.white,
                   ),
                 ),
-              )
+              ),
             ],
           ),
           const SizedBox(
             height: 20,
           ),
+          // Register button - Disable if checkbox is not checked
           TextButton(
-            onPressed: () async {
-              try {
-                final String email = _getEmail();
-                final String password = _getPassword();
-                final authResult =
-                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                  email: email,
-                  password: password,
-                );
+            onPressed: isCheckboxChecked
+                ? () async {
+                    try {
+                      final String email = _getEmail();
+                      final String password = _getPassword();
+                      final authResult = await FirebaseAuth.instance
+                          .createUserWithEmailAndPassword(
+                        email: email,
+                        password: password,
+                      );
 
-                // Display a success alert
-                _showSuccessAlert(context, "Hesabınız oluşturuldu");
+                      // Display a success alert
+                      _showSuccessAlert(context, "Hesabınız oluşturuldu");
 
-                // Clear the form fields after successful signup
-                _clearFormFields();
-              } catch (e) {
-                // Handle errors during signup
-                _showErrorAlert(context, e.toString());
-              }
-            },
+                      // Clear the form fields after successful signup
+                      _clearFormFields();
+                    } catch (e) {
+                      // Handle errors during signup
+                      _showErrorAlert(context, e.toString());
+                    }
+                  }
+                : null, // Set to null to disable the button when checkbox is not checked
             style: ButtonStyle(
               fixedSize: MaterialStateProperty.all(const Size(200, 30)),
               overlayColor:

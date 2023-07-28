@@ -24,24 +24,16 @@ class FormValidation extends StatefulWidget {
 }
 
 class _FormValidationState extends State<FormValidation> {
-  final TextEditingController _controller = TextEditingController();
   bool _showError = false;
 
   @override
   void initState() {
     super.initState();
-    _controller.addListener(_validate);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   void _validate() {
     setState(() {
-      _showError = _controller.text.isNotEmpty;
+      _showError = widget.controller.text.isNotEmpty;
     });
   }
 
@@ -71,7 +63,7 @@ class _FormValidationState extends State<FormValidation> {
   }
 
   String? _validatePassword(String value) {
-    if (value.length > 8) {
+    if (value.length >= 8) {
       return null; // Valid password
     }
     return 'Şifre en az 8 karakter olmalıdır';
@@ -104,7 +96,8 @@ class _FormValidationState extends State<FormValidation> {
               hintStyle: const TextStyle(
                 color: Colors.grey,
               ),
-              errorText: _showError ? _validateField(_controller.text) : null,
+              errorText:
+                  _showError ? _validateField(widget.controller.text) : null,
               // Set obscureText to true for the password field
             ),
             obscureText: widget.fieldType == FormFieldType.Password,
