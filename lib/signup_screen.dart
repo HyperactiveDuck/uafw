@@ -163,7 +163,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 fieldType: FormFieldType.Email,
                 formWidth: 250,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               FormValidation(
