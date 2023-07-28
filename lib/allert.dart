@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:uafw/game_page_tetris.dart';
+import 'package:uafw/tetris_controls_guilde.dart';
+import 'snake_controls_guilde.dart';
 
 class GameInfo extends StatefulWidget {
   const GameInfo({super.key});
@@ -37,7 +39,7 @@ class _GameInfoState extends State<GameInfo> {
                     PageTransition(
                       type: PageTransitionType.fade,
                       childCurrent: const GameInfo(),
-                      child: const GamePageTetris(),
+                      child: const TetrisController(),
                     ));
               },
               child: Container(
@@ -46,10 +48,10 @@ class _GameInfoState extends State<GameInfo> {
                   color: const Color.fromARGB(255, 21, 26, 29),
                 ),
                 height: 60,
-                width: 100,
+                width: 150,
                 padding: const EdgeInsets.all(10),
                 child: const Text(
-                  'Başla',
+                  'Devam Et',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30,
