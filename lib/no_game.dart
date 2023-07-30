@@ -47,10 +47,10 @@ class _NoGameState extends State<NoGame> {
                 _signOutUser().then((_) {
                   Navigator.pushReplacement(
                     context,
-                    MaterialPageRoute(builder: (context) => LoginPage()),
+                    MaterialPageRoute(builder: (context) => const LoginPage()),
                   );
                 }).catchError((error) {
-                  print('Error signing out: $error');
+                  debugPrint('Hata: $error');
                 });
               },
               child: Container(

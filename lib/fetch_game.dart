@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -31,13 +33,13 @@ void navigateToGameScreen(BuildContext context, String assignedGame) {
     case 'snake':
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => SnakeController()),
+        MaterialPageRoute(builder: (context) => const SnakeController()),
       );
       break;
     case 'tetris':
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => TetrisController()),
+        MaterialPageRoute(builder: (context) => const TetrisController()),
       );
       break;
     case 'atanmadi':
