@@ -20,21 +20,15 @@ class FormValidation extends StatefulWidget {
   });
 
   @override
-  _FormValidationState createState() => _FormValidationState();
+  FormValidationState createState() => FormValidationState();
 }
 
-class _FormValidationState extends State<FormValidation> {
+class FormValidationState extends State<FormValidation> {
   bool _showError = false;
 
   @override
   void initState() {
     super.initState();
-  }
-
-  void _validate() {
-    setState(() {
-      _showError = widget.controller.text.isNotEmpty;
-    });
   }
 
   String? _validateField(String value) {
@@ -49,7 +43,7 @@ class _FormValidationState extends State<FormValidation> {
   }
 
   String? _validateEmail(String value) {
-    if (value.contains('@') && value.contains('.com')) {
+    if (value.contains('@') && value.contains('.')) {
       return null; // Valid email
     }
     return 'Geçersiz e-posta adresi';

@@ -1,17 +1,20 @@
+// ignore_for_file: avoid_web_libraries_in_flutter, use_build_context_synchronously
+
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:uafw/widgets/registiry_text_input_login.dart';
+import 'package:page_transition/page_transition.dart';
+import 'dart:html' as html;
+import 'login.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'dart:html' as html;
 
-import 'login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<RegisterPage> createState() => RegisterPageState();
 }
 
 void _showSuccessAlert(BuildContext context, String message) {
@@ -60,15 +63,45 @@ void _showErrorAlert(BuildContext context, String errorMessage) {
   ).show();
 }
 
-void _clearFormFields() {
-  // Replace this with the logic to clear the form fields after successful signup.
+void _clearFormFields(TextEditingController controller) {
+  controller.clear();
 }
 
 bool checkBoxChecked = false;
 
-class _RegisterPageState extends State<RegisterPage> {
+class RegisterPageState extends State<RegisterPage> {
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  void addUserToKullanicilar(User user) async {
+    try {
+      // Get the current user's UID (Firebase Authentication UID)
+      String uid = user.uid;
+      // Get the user's name and email from the respective TextEditingController
+      String name = _nameController.text;
+      String email = _emailController.text;
+
+      // Create a reference to the user's document in the "kullanicilar" collection
+      DocumentReference userRef =
+          FirebaseFirestore.instance.collection('kullanicilar').doc(uid);
+
+      // Check if the document already exists to avoid overwriting existing data
+      DocumentSnapshot userSnapshot = await userRef.get();
+      if (!userSnapshot.exists) {
+        // If the document doesn't exist, create it with the user's name, email, and the "game_assignment" field
+        // Here, we'll assign a default game value "snake" to each user
+        await userRef.set({
+          'uid': uid,
+          'isim': name,
+          'eposta': email,
+          'oyun': 'atanmadi',
+        });
+      }
+    } catch (e) {
+      debugPrint('Error adding user to "kullanicilar" collection: $e');
+    }
+  }
 
   @override
   void dispose() {
@@ -115,13 +148,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       setState(
                         () {
                           Navigator.push(
-                            context,
-                            PageTransition(
-                              type: PageTransitionType.fade,
-                              childCurrent: const RegisterPage(),
-                              child: const LoginPage(),
-                            ),
-                          );
+                              context,
+                              PageTransition(
+                                type: PageTransitionType.fade,
+                                childCurrent: const RegisterPage(),
+                                child: const LoginPage(),
+                              ));
                         },
                       );
                     },
@@ -130,17 +162,16 @@ class _RegisterPageState extends State<RegisterPage> {
                     width: 10,
                   ),
                   ChoiceChip(
-                    selectedColor: const Color.fromRGBO(57, 210, 192, 1),
-                    surfaceTintColor: Colors.teal,
-                    avatar: const Icon(Icons.person_add_rounded),
-                    label: const Text('Kayıt Ol'),
-                    selected: true,
-                    onSelected: (bool value) {
-                      setState(
-                        () {},
-                      );
-                    },
-                  ),
+                      selectedColor: const Color.fromRGBO(57, 210, 192, 1),
+                      surfaceTintColor: Colors.teal,
+                      avatar: const Icon(Icons.person_add_rounded),
+                      label: const Text('Kayıt Ol'),
+                      selected: true,
+                      onSelected: (bool value) {
+                        setState(
+                          () {},
+                        );
+                      }),
                 ],
               )
             ],
@@ -152,6 +183,14 @@ class _RegisterPageState extends State<RegisterPage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              FormValidation(
+                controller: _nameController,
+                fieldType: FormFieldType.Name,
+                formWidth: 250,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               FormValidation(
                 controller: _emailController,
                 fieldType: FormFieldType.Email,
@@ -198,10 +237,12 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
             ],
           ),
+
           const SizedBox(
             height: 20,
           ),
-          // Register button - Disable if checkbox is not checked
+
+          // Register button - Greyed out if checkbox is not checked
           TextButton(
             onPressed: isCheckboxChecked
                 ? () async {
@@ -213,12 +254,15 @@ class _RegisterPageState extends State<RegisterPage> {
                         email: email,
                         password: password,
                       );
-
+                      if (authResult.user != null) {
+                        addUserToKullanicilar(authResult.user!);
+                      }
                       // Display a success alert
                       _showSuccessAlert(context, "Hesabınız oluşturuldu");
 
                       // Clear the form fields after successful signup
-                      _clearFormFields();
+                      _clearFormFields(_emailController);
+                      _clearFormFields(_passwordController);
                     } catch (e) {
                       // Handle errors during signup
                       _showErrorAlert(context, e.toString());
@@ -229,8 +273,14 @@ class _RegisterPageState extends State<RegisterPage> {
               fixedSize: MaterialStateProperty.all(const Size(200, 30)),
               overlayColor:
                   const MaterialStatePropertyAll(Color.fromRGBO(27, 97, 89, 1)),
-              backgroundColor: const MaterialStatePropertyAll(
-                  Color.fromRGBO(57, 210, 192, 1)),
+
+              // Set the color to grey when the checkbox is not checked
+              backgroundColor: MaterialStateColor.resolveWith((states) {
+                if (states.contains(MaterialState.disabled)) {
+                  return Colors.grey; // Grey out when disabled
+                }
+                return const Color.fromRGBO(57, 210, 192, 1); // Default color
+              }),
             ),
             child: const Text(
               'Kayıt ol',

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -159,11 +161,29 @@ class _LoginPageState extends State<LoginPage> {
                   );
                 } else {
                   // Handle the case when authResult.user is null (shouldn't happen in this case)
-                  _showErrorAlert("Login failed. Please try again.");
+                  _showErrorAlert(
+                      "Giriş Başarısız. Lütfen Bilgileriniziş deneyip tekrar girin.");
                 }
               } catch (e) {
+                debugPrint(e.toString());
                 // Handle errors during login
-                _showErrorAlert(e.toString());
+                switch (e.toString()) {
+                  case '[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted.':
+                    _showErrorAlert(
+                        "Böyle bir kullanıcı bulunmamaktadır. Lütfen bilgilerinizi kontrol edip tekrar deneyin.");
+                    break;
+                  case '[firebase_auth/wrong-password] The password is invalid or the user does not have a password.':
+                    _showErrorAlert(
+                        "Giriş Başarısız. Lütfen Bilgilerinizi kontrol edip tekrar deneyin.");
+                    break;
+                  case '[firebase_auth/invalid-email] The email address is badly formatted.':
+                    _showErrorAlert(
+                        "Giriş Başarısız. Lütfen Bilgilerinizi kontrol edip tekrar deneyin.");
+                    break;
+                  default:
+                    _showErrorAlert("Bir şeyler ters gitti. Tekrar deneyin.");
+                    break;
+                }
               }
             },
             style: ButtonStyle(
