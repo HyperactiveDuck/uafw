@@ -66,7 +66,7 @@ packages:
     source: hosted
     version: "3.6.3"
   collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: collection
       sha256: "4a07be6cb69c84d677a6c3096fcf960cc3285a8330b4603e0d463d15d9bd934c"
@@ -150,6 +150,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_countdown_timer:
+    dependency: "direct main"
+    description:
+      name: flutter_countdown_timer
+      sha256: dfcbd7d6f76a5589f78f3f3ba2f9ea2e199368eccc1adce4153ce985b9587bc5
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   flutter_hooks:
     dependency: "direct main"
     description:
@@ -158,6 +166,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.18.6"
+  flutter_inappwebview:
+    dependency: "direct main"
+    description:
+      name: flutter_inappwebview
+      sha256: f73505c792cf083d5566e1a94002311be497d984b5607f25be36d685cf6361cf
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.7.2+3"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -171,6 +187,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_timer_countdown:
+    dependency: "direct main"
+    description:
+      name: flutter_timer_countdown
+      sha256: "95afd180ad88f446e5f90615e07d7b759730d86076fcef5982afed3e07d917c1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -421,6 +445,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  webview_flutter:
+    dependency: "direct main"
+    description:
+      name: webview_flutter
+      sha256: "789d52bd789373cc1e100fb634af2127e86c99cf9abde09499743270c5de8d00"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.2"
+  webview_flutter_android:
+    dependency: transitive
+    description:
+      name: webview_flutter_android
+      sha256: d936a09fbfd08cb78f7329e0bbacf6158fbdfe24ffc908b22444c07d295eb193
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.9.2"
+  webview_flutter_platform_interface:
+    dependency: transitive
+    description:
+      name: webview_flutter_platform_interface
+      sha256: "564ef378cafc1a0e29f1d76ce175ef517a0a6115875dff7b43fccbef2b0aeb30"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.0"
+  webview_flutter_wkwebview:
+    dependency: transitive
+    description:
+      name: webview_flutter_wkwebview
+      sha256: "5fa098f28b606f699e8ca52d9e4e11edbbfef65189f5f77ae92703ba5408fd25"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.2"
 sdks:
   dart: ">=3.0.5 <4.0.0"
   flutter: ">=3.10.0"

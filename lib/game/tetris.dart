@@ -18,7 +18,7 @@ class Tetris extends StatefulWidget {
 class _TetrisState extends State<Tetris> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (context) => Board(this),
+        create: (context) => Board(this, this.context),
         child: const TetrisView(),
       );
 }
@@ -69,7 +69,7 @@ class LeftView extends StatelessWidget {
           topRight: false,
           bottomRight: false,
           child: Column(
-            children: [const Text('Duran'), PieceView(piece: piece)],
+            children: [const Text('Tutulan'), PieceView(piece: piece)],
           ),
         ),
         const SizedBox(height: 50),
@@ -117,7 +117,7 @@ class RightView extends StatelessWidget {
           bottomLeft: false,
           child: Column(
             children: [
-              const Text('Sonraki'),
+              const Text('Sonrakiler'),
               ...pieces.take(3).map((p) => PieceView(piece: p))
             ],
           ),

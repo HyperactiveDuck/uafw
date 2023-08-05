@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 
 class UserScore {
   final int score;
@@ -48,6 +49,6 @@ Future<void> saveUserScore(String userId, UserScore score) async {
     }
   } catch (e) {
     // Handle any errors that occur while saving the score
-    print('Error saving user score: $e');
+    debugPrint('Error saving user score: $e');
   }
 }

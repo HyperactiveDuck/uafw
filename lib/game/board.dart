@@ -6,6 +6,8 @@ import 'package:uafw/game/piece.dart';
 import 'package:uafw/game/rotation.dart';
 import 'package:uafw/game/touch.dart';
 import 'package:uafw/game/vector.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Board extends ChangeNotifier {
   static const Duration lockDelayTime = Duration(seconds: 1);
@@ -13,6 +15,8 @@ class Board extends ChangeNotifier {
   static const int x = 10;
   static const int y = 2 * x;
   static const bool isAnimationEnabled = true;
+
+  final BuildContext context;
 
   Ticker? _ticker;
   int lastMovedTime = 0;
@@ -37,7 +41,7 @@ class Board extends ChangeNotifier {
 
   List<AnimationController> animationController;
 
-  Board(TickerProvider tickerProvider)
+  Board(TickerProvider tickerProvider, this.context) // Add the parameter here
       : currentPiece = Piece.empty(),
         _blocked = [],
         _cursor = Vector.zero,
@@ -55,12 +59,64 @@ class Board extends ChangeNotifier {
 
   int ticks = 0;
 
+  void showGameOverDialog(BuildContext context, int clearedLines) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          title: const Text('Oyun Bitti'),
+          content: Text('Puanınız : ' + ((clearedLines) * 100).toString()),
+          actions: [
+            TextButton(
+              onPressed: () {
+                saveScoreToFirestore(clearedLines);
+              },
+              child: const Text('Çıkış Yap'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> saveScoreToFirestore(int clearedLines) async {
+    try {
+      // Get the current user's UID
+      final User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        print('User is not logged in.');
+        return;
+      }
+      final String userUID = user.uid;
+
+      // Get a reference to the user's document in the "kullanicilar" collection
+      final CollectionReference usersCollection =
+          FirebaseFirestore.instance.collection('kullanicilar');
+      final DocumentReference userDocument = usersCollection.doc(userUID);
+
+      // Get the current date in Firestore Timestamp format
+      final Timestamp currentDate = Timestamp.now();
+
+      // Create a map with the date as the key and the clearedLines as the value
+      final Map<String, dynamic> scoreData = {
+        currentDate.toDate().toString(): clearedLines * 100,
+      };
+
+      // Update the user's document with the new score
+      await userDocument.update(scoreData);
+    } catch (e) {
+      print('Error saving score to Firestore: $e');
+      // Handle the error if needed
+    }
+  }
+
   void onTick(Duration elapsed) {
     if (ticks % getLevel(clearedLines).speed == 0) {
       move(const Vector(0, -1));
     }
     if (isBlockOut()) {
-      startGame();
+      showGameOverDialog(context, clearedLines);
     } else if (!canMove(const Vector(0, -1)) && isLockDelayExpired()) {
       merge();
       clearRows();
