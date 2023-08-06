@@ -7,9 +7,13 @@ import 'package:uafw/game/level.dart';
 import 'package:uafw/game/piece.dart';
 import 'package:uafw/game/touch.dart';
 import 'package:uafw/game/vector.dart';
+import 'dart:async';
 
 class Tetris extends StatefulWidget {
-  const Tetris({Key? key}) : super(key: key);
+  Tetris({Key? key}) : super(key: key);
+
+  int remainingTimeInSeconds = 900; // 15 minutes in seconds
+  Timer? timer;
 
   @override
   State<Tetris> createState() => _TetrisState();
@@ -19,12 +23,12 @@ class _TetrisState extends State<Tetris> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (context) => Board(this, this.context),
-        child: const TetrisView(),
+        child: TetrisView(),
       );
 }
 
 class TetrisView extends StatelessWidget {
-  const TetrisView({super.key});
+  // ... Other code ...
 
   @override
   Widget build(BuildContext context) => TouchDetector(
@@ -37,15 +41,16 @@ class TetrisView extends StatelessWidget {
             body: SafeArea(
               child: Center(
                 child: LayoutBuilder(
-                    builder: (context, constraints) => Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const LeftView(),
-                            CenterView(constraints),
-                            const RightView(),
-                          ],
-                        )),
+                  builder: (context, constraints) => Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const LeftView(),
+                      CenterView(constraints),
+                      const RightView(),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),
@@ -60,6 +65,11 @@ class LeftView extends StatelessWidget {
   Widget build(BuildContext context) {
     final piece = context.select<Board, Piece?>((value) => value.holdPiece);
     final lines = context.select<Board, int>((value) => value.clearedLines);
+    final remainingTime =
+        context.select<Board, int>((value) => value.remainingTimeInSeconds);
+    final minutes = remainingTime ~/ 60;
+    final seconds = remainingTime % 60;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -68,9 +78,9 @@ class LeftView extends StatelessWidget {
         PanelView(
           topRight: false,
           bottomRight: false,
-          child: Column(
-            children: [const Text('Tutulan'), PieceView(piece: piece)],
-          ),
+          child: Text(
+              style: const TextStyle(fontSize: 20),
+              'Kalan Süre: ${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}'),
         ),
         const SizedBox(height: 50),
         PanelView(
@@ -78,11 +88,14 @@ class LeftView extends StatelessWidget {
           bottomRight: false,
           child: Column(
             children: [
-              const Text('Seviye'),
-              Text('${getLevel(lines).id}'),
-              const SizedBox(height: 10),
-              const Text('Puan'),
-              Text('$lines'),
+              const SizedBox(
+                  width: 155,
+                  child: Center(
+                      child: Text('Puan', style: TextStyle(fontSize: 20)))),
+              Text(
+                '${lines * 100}',
+                style: TextStyle(fontSize: 20),
+              ),
             ],
           ),
         ),
@@ -117,8 +130,11 @@ class RightView extends StatelessWidget {
           bottomLeft: false,
           child: Column(
             children: [
-              const Text('Sonrakiler'),
-              ...pieces.take(3).map((p) => PieceView(piece: p))
+              const Text(
+                'Sonraki',
+                style: TextStyle(fontSize: 20),
+              ),
+              ...pieces.take(1).map((p) => PieceView(piece: p))
             ],
           ),
         ),

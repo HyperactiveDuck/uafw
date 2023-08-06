@@ -4,6 +4,21 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
+import 'package:uafw/game/level.dart';
+import 'package:uafw/game/piece.dart';
+import 'package:uafw/game/rotation.dart';
+import 'package:uafw/game/touch.dart';
+import 'package:uafw/game/vector.dart';
+import 'package:uafw/game/tetris.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+import 'package:page_transition/page_transition.dart';
+import 'package:uafw/game_page_snake.dart';
+import 'package:uafw/login.dart';
 
 void main() => runApp(const MyApp());
 
@@ -150,12 +165,18 @@ class SnakeGameState extends State<SnakeGame> {
           ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Skoru Yükle'),
+              child: const Text('Skoru Yükle ve Çıkış Yap'),
               onPressed: () {
                 saveScoreToFirestore((snake.length - 2) * 100);
                 gameEnded =
                     false; // Reset the gameEnded flag when the user closes the alert
-                Navigator.pop(context); // Close the alert
+                Navigator.push(
+                    context,
+                    PageTransition(
+                      type: PageTransitionType.fade,
+                      childCurrent: const GamePageSnake(),
+                      child: const LoginPage(),
+                    )); // Close the alert
               },
             ),
           ],

@@ -6,8 +6,14 @@ import 'package:uafw/game/piece.dart';
 import 'package:uafw/game/rotation.dart';
 import 'package:uafw/game/touch.dart';
 import 'package:uafw/game/vector.dart';
+import 'package:uafw/game/tetris.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:async';
+import 'package:page_transition/page_transition.dart';
+import 'package:uafw/game_page_snake.dart';
+import 'package:uafw/game_page_tetris.dart';
+import 'package:uafw/login.dart';
 
 class Board extends ChangeNotifier {
   static const Duration lockDelayTime = Duration(seconds: 1);
@@ -15,6 +21,9 @@ class Board extends ChangeNotifier {
   static const int x = 10;
   static const int y = 2 * x;
   static const bool isAnimationEnabled = true;
+
+  int remainingTimeInSeconds = 30; // 15 minutes in seconds
+  Timer? timer;
 
   final BuildContext context;
 
@@ -58,26 +67,45 @@ class Board extends ChangeNotifier {
   }
 
   int ticks = 0;
-
   void showGameOverDialog(BuildContext context, int clearedLines) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          title: const Text('Oyun Bitti'),
-          content: Text('Puanınız : ' + ((clearedLines) * 100).toString()),
-          actions: [
-            TextButton(
-              onPressed: () {
-                saveScoreToFirestore(clearedLines);
-              },
-              child: const Text('Çıkış Yap'),
-            ),
-          ],
-        );
-      },
+    final overlay = Overlay.of(context);
+    OverlayEntry? overlayEntry; // Declare the variable as nullable
+
+    overlayEntry = OverlayEntry(
+      builder: (context) => Stack(
+        children: [
+          // Semi-transparent background to block the screen
+          Container(
+            color: Colors.black54,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          AlertDialog(
+            backgroundColor: Colors.white,
+            title: const Text('Oyun Bitti'),
+            content: Text('Puanınız: ' + ((clearedLines) * 100).toString()),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  saveScoreToFirestore(clearedLines);
+                  overlayEntry!.remove();
+                  Navigator.push(
+                      context,
+                      PageTransition(
+                        type: PageTransitionType.fade,
+                        childCurrent: const GamePageTetris(),
+                        child: const LoginPage(),
+                      ));
+                  // Remove the overlay using the non-null assertion operator
+                },
+                child: const Text('Çıkış Yap'),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
+    overlay.insert(overlayEntry);
   }
 
   Future<void> saveScoreToFirestore(int clearedLines) async {
@@ -142,6 +170,19 @@ class Board extends ChangeNotifier {
 
   void startGame() {
     reset();
+    startTimer();
+  }
+
+  void startTimer() {
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (remainingTimeInSeconds > 0) {
+        remainingTimeInSeconds--;
+        notifyListeners();
+      } else {
+        timer.cancel();
+        showGameOverDialog(context, clearedLines);
+      }
+    });
   }
 
   bool isBlocked(Vector v) => _blocked.contains(v);

@@ -23,6 +23,6 @@ class App extends StatelessWidget {
           ),
         ),
         debugShowCheckedModeBanner: false,
-        home: const Tetris(),
+        home: Tetris(),
       );
 }
