@@ -1,11 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'snake_controls_guilde.dart';
-import 'tetris_controls_guilde.dart';
-import 'no_game.dart';
+import '../pages/snake_controls_guilde.dart';
+import '../pages/tetris_controls_guilde.dart';
+import '../pages/no_game.dart';
 
 // Define an async function to fetch the game assignment
 Future<void> fetchGameAssignment(BuildContext context, String uid) async {

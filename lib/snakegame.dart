@@ -4,21 +4,9 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
-import 'package:uafw/game/level.dart';
-import 'package:uafw/game/piece.dart';
-import 'package:uafw/game/rotation.dart';
-import 'package:uafw/game/touch.dart';
-import 'package:uafw/game/vector.dart';
-import 'package:uafw/game/tetris.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'dart:async';
 import 'package:page_transition/page_transition.dart';
-import 'package:uafw/game_page_snake.dart';
-import 'package:uafw/login.dart';
+import 'package:uafw/pages/game_page_snake.dart';
+import 'package:uafw/pages/login.dart';
 
 void main() => runApp(const MyApp());
 
@@ -77,7 +65,7 @@ class SnakeGameState extends State<SnakeGame> {
     isPlaying = true;
 
     // Start the countdown timer
-    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       setState(() {
         remainingTime--;
       });
@@ -160,7 +148,7 @@ class SnakeGameState extends State<SnakeGame> {
         return AlertDialog(
           title: const Text('Oyun Bitti'),
           content: Text(
-            'Skor: ' + ((snake.length - 2) * 100).toString(),
+            'Skor: ${(snake.length - 2) * 100}',
             style: const TextStyle(fontSize: 20),
           ),
           actions: <Widget>[
@@ -187,15 +175,13 @@ class SnakeGameState extends State<SnakeGame> {
 
   Future<void> saveScoreToFirestore(int score) async {
     try {
-      // Get the current user's UID
       final User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        print('User is not logged in.');
+        debugPrint('User is not logged in.');
         return;
       }
       final String userUID = user.uid;
 
-      // Get a reference to the user's document in the "kullanicilar" collection
       final CollectionReference usersCollection =
           FirebaseFirestore.instance.collection('kullanicilar');
       final DocumentReference userDocument = usersCollection.doc(userUID);
@@ -203,15 +189,26 @@ class SnakeGameState extends State<SnakeGame> {
       // Get the current date in Firestore Timestamp format
       final Timestamp currentDate = Timestamp.now();
 
-      // Create a map with the date as the key and the score as the value
-      final Map<String, dynamic> scoreData = {
-        currentDate.toDate().toString(): score,
-      };
+      // Fetch the existing "Tarih ve Skor" map from Firestore
+      final DocumentSnapshot userSnapshot = await userDocument.get();
 
-      // Update the user's document with the new score
-      await userDocument.update(scoreData);
+      // Cast the retrieved data to a Map<String, dynamic> type
+      final Map<String, dynamic>? existingData =
+          userSnapshot.data() as Map<String, dynamic>?;
+
+      // Create an empty map if there's no existing data
+      final Map<String, dynamic> existingScores =
+          existingData?['Tarih ve Skor'] ?? {};
+
+      // Add the new score to the existing scores map
+      existingScores[currentDate.toDate().toString()] = score;
+
+      // Update the user's document with the updated scores map
+      await userDocument.update({
+        "Tarih ve Skor": existingScores,
+      });
     } catch (e) {
-      print('Error saving score to Firestore: $e');
+      debugPrint('Error saving score to Firestore: $e');
       // Handle the error if needed
     }
   }
@@ -338,10 +335,6 @@ class SnakeGameState extends State<SnakeGame> {
                             : (isPlaying ? Colors.red : Colors.blue),
                       ),
                     ),
-                    child: Text(
-                      isPlaying ? 'Bitir' : 'Başlat',
-                      style: fontStyle,
-                    ),
                     onPressed:
                         gameEnded // Disable the button if the game has ended
                             ? null
@@ -353,6 +346,10 @@ class SnakeGameState extends State<SnakeGame> {
                                   startGame();
                                 }
                               },
+                    child: Text(
+                      isPlaying ? 'Bitir' : 'Başlat',
+                      style: fontStyle,
+                    ),
                   ),
                 ),
                 Flexible(

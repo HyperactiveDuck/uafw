@@ -2,11 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uafw/game/board.dart';
-import 'package:uafw/game/level.dart';
-import 'package:uafw/game/piece.dart';
-import 'package:uafw/game/touch.dart';
-import 'package:uafw/game/vector.dart';
+import 'package:uafw/tetris_game/board.dart';
+import 'package:uafw/tetris_game/piece.dart';
+import 'package:uafw/tetris_game/touch.dart';
+import 'package:uafw/tetris_game/vector.dart';
 import 'dart:async';
 
 class Tetris extends StatefulWidget {
@@ -23,11 +22,13 @@ class _TetrisState extends State<Tetris> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (context) => Board(this, this.context),
-        child: TetrisView(),
+        child: const TetrisView(),
       );
 }
 
 class TetrisView extends StatelessWidget {
+  const TetrisView({super.key});
+
   // ... Other code ...
 
   @override
@@ -63,7 +64,6 @@ class LeftView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final piece = context.select<Board, Piece?>((value) => value.holdPiece);
     final lines = context.select<Board, int>((value) => value.clearedLines);
     final remainingTime =
         context.select<Board, int>((value) => value.remainingTimeInSeconds);
@@ -94,7 +94,7 @@ class LeftView extends StatelessWidget {
                       child: Text('Puan', style: TextStyle(fontSize: 20)))),
               Text(
                 '${lines * 100}',
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
             ],
           ),

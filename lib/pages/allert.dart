@@ -1,25 +1,25 @@
 import 'package:flutter/material.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:uafw/snake_controls_guilde.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'signup_screen.dart';
-import 'package:uafw/widgets/registiry_text_input_login.dart';
-import 'fetch_game.dart';
-import 'login.dart';
+import '../widgets/fetch_game.dart';
 
-class NoGame extends StatefulWidget {
-  NoGame({super.key});
+class GameInfo extends StatefulWidget {
+  GameInfo({super.key});
 
   String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
 
   @override
-  State<NoGame> createState() => _NoGameState();
+  State<GameInfo> createState() => _GameInfoState();
 }
 
-class _NoGameState extends State<NoGame> {
-  Future<void> _signOutUser() {
-    return FirebaseAuth.instance.signOut();
+class _GameInfoState extends State<GameInfo> {
+  Future<void> registerLoginTime() async {
+    // Save login date and time to Firestore
+    DateTime loginTime = DateTime.now();
+    await FirebaseFirestore.instance
+        .collection('kullanicilar')
+        .doc(widget.uid)
+        .set({'sonGiris': loginTime}, SetOptions(merge: true));
   }
 
   @override
@@ -31,7 +31,7 @@ class _NoGameState extends State<NoGame> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Henüz hesabınıza bir oyun atanmadı.\nLütfen daha sonra tekrar deneyiniz.',
+              'Butona tıkladığınızda karşınza seçilmiş olan 2 oyundan biri çıkacak.\n"Başla" butonuna tıkladığınıdada oyun başlayacak.\nOyunu her gün yalnızca 15 dakika kadar oynayabilirsiniz.\nOyundaki skorlarınız sistem tarafından kaydedilecek ve deney için kullanılacaktır',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -43,15 +43,9 @@ class _NoGameState extends State<NoGame> {
               height: 50,
             ),
             TextButton(
-              onPressed: () {
-                _signOutUser().then((_) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
-                }).catchError((error) {
-                  debugPrint('Hata: $error');
-                });
+              onPressed: () async {
+                await fetchGameAssignment(context, widget.uid);
+                await registerLoginTime();
               },
               child: Container(
                 decoration: BoxDecoration(

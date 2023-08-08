@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uafw/game/tetris.dart';
+import 'package:uafw/tetris_game/tetris.dart';
 
 void main() {
   runApp(const App());

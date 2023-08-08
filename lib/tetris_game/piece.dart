@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:uafw/game/rotation.dart';
-import 'package:uafw/game/vector.dart';
+import 'package:uafw/tetris_game/rotation.dart';
+import 'package:uafw/tetris_game/vector.dart';
 
 /// https://harddrop.com/wiki/Random_Generator
 List<Piece> get nextPieceBag => _tiles

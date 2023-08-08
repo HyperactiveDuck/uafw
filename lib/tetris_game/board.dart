@@ -1,19 +1,20 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:uafw/game/level.dart';
-import 'package:uafw/game/piece.dart';
-import 'package:uafw/game/rotation.dart';
-import 'package:uafw/game/touch.dart';
-import 'package:uafw/game/vector.dart';
-import 'package:uafw/game/tetris.dart';
+import 'package:uafw/tetris_game/level.dart';
+import 'package:uafw/tetris_game/piece.dart';
+import 'package:uafw/tetris_game/rotation.dart';
+import 'package:uafw/tetris_game/touch.dart';
+import 'package:uafw/tetris_game/vector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
+import 'package:universal_html/html.dart' as html;
 import 'package:page_transition/page_transition.dart';
-import 'package:uafw/game_page_snake.dart';
-import 'package:uafw/game_page_tetris.dart';
-import 'package:uafw/login.dart';
+import 'package:uafw/pages/game_page_tetris.dart';
+import 'package:uafw/pages/login.dart';
 
 class Board extends ChangeNotifier {
   static const Duration lockDelayTime = Duration(seconds: 1);
@@ -22,7 +23,7 @@ class Board extends ChangeNotifier {
   static const int y = 2 * x;
   static const bool isAnimationEnabled = true;
 
-  int remainingTimeInSeconds = 30; // 15 minutes in seconds
+  int remainingTimeInSeconds = 900; // 15 minutes in seconds
   Timer? timer;
 
   final BuildContext context;
@@ -83,22 +84,15 @@ class Board extends ChangeNotifier {
           AlertDialog(
             backgroundColor: Colors.white,
             title: const Text('Oyun Bitti'),
-            content: Text('Puanınız: ' + ((clearedLines) * 100).toString()),
+            content: Text('Puanınız: ${(clearedLines) * 100}'),
             actions: [
               TextButton(
-                onPressed: () {
-                  saveScoreToFirestore(clearedLines);
-                  overlayEntry!.remove();
-                  Navigator.push(
-                      context,
-                      PageTransition(
-                        type: PageTransitionType.fade,
-                        childCurrent: const GamePageTetris(),
-                        child: const LoginPage(),
-                      ));
+                onPressed: () async {
+                  await saveScoreToFirestore(clearedLines);
+                  html.window.location.reload();
                   // Remove the overlay using the non-null assertion operator
                 },
-                child: const Text('Çıkış Yap'),
+                child: const Text('Skoru Kaydet ve Çıkış Yap'),
               ),
             ],
           ),
@@ -110,15 +104,13 @@ class Board extends ChangeNotifier {
 
   Future<void> saveScoreToFirestore(int clearedLines) async {
     try {
-      // Get the current user's UID
       final User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        print('User is not logged in.');
+        debugPrint('User is not logged in.');
         return;
       }
       final String userUID = user.uid;
 
-      // Get a reference to the user's document in the "kullanicilar" collection
       final CollectionReference usersCollection =
           FirebaseFirestore.instance.collection('kullanicilar');
       final DocumentReference userDocument = usersCollection.doc(userUID);
@@ -126,15 +118,26 @@ class Board extends ChangeNotifier {
       // Get the current date in Firestore Timestamp format
       final Timestamp currentDate = Timestamp.now();
 
-      // Create a map with the date as the key and the clearedLines as the value
-      final Map<String, dynamic> scoreData = {
-        currentDate.toDate().toString(): clearedLines * 100,
-      };
+      // Fetch the existing "Tarih ve Skor" map from Firestore
+      final DocumentSnapshot userSnapshot = await userDocument.get();
 
-      // Update the user's document with the new score
-      await userDocument.update(scoreData);
+      // Cast the retrieved data to a Map<String, dynamic> type
+      final Map<String, dynamic>? existingData =
+          userSnapshot.data() as Map<String, dynamic>?;
+
+      // Create an empty map if there's no existing data
+      final Map<String, dynamic> existingScores =
+          existingData?['Tarih ve Skor'] ?? {};
+
+      // Add the new score to the existing scores map
+      existingScores[currentDate.toDate().toString()] = clearedLines * 100;
+
+      // Update the user's document with the updated scores map
+      await userDocument.update({
+        "Tarih ve Skor": existingScores,
+      });
     } catch (e) {
-      print('Error saving score to Firestore: $e');
+      debugPrint('Error saving score to Firestore: $e');
       // Handle the error if needed
     }
   }
@@ -174,7 +177,7 @@ class Board extends ChangeNotifier {
   }
 
   void startTimer() {
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (remainingTimeInSeconds > 0) {
         remainingTimeInSeconds--;
         notifyListeners();

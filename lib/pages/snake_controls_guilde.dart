@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'game_page_snake.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:uafw/game_page_tetris.dart';
 
-class TetrisController extends StatefulWidget {
-  const TetrisController({super.key});
+class SnakeController extends StatefulWidget {
+  const SnakeController({super.key});
 
   @override
-  State<TetrisController> createState() => TetrisControllerState();
+  State<SnakeController> createState() => _SnakeControllerState();
 }
 
-class TetrisControllerState extends State<TetrisController> {
+class _SnakeControllerState extends State<SnakeController> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -29,7 +29,7 @@ class TetrisControllerState extends State<TetrisController> {
                         fontWeight: FontWeight.bold),
                   )),
               const Text(
-                'Blokları sağ ve sol yön tuşlatıyla sağa ve sola oynatabilirsiniz\nKlavyenizdeki  "A" tuşu bloğu sağa , "D" tuşu bloğu sola çevirecektir\n Aşağı yön tuşu blokların daha hızlı inmesini sağlar\nKlavyenizdeki boşluk tuşu blokların tek hamlede yere inmesini sağlar.',
+                'Yılanı yön tuşlarıyla kontrol edebilirsiniz \nYılan duvarlardan geçemez , duvaralara değdiniz an oyun biter. \nYılan kendi kuyruğuna değemez , değdiğ an oyun biter.\nYılan yalnızca oyunun başında gittiği yönün tersine dönebilir , ilk yemi yedikten sonra birdaha 180° dönüş yapamaz ',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -46,8 +46,8 @@ class TetrisControllerState extends State<TetrisController> {
                       context,
                       PageTransition(
                         type: PageTransitionType.fade,
-                        childCurrent: const TetrisController(),
-                        child: const GamePageTetris(),
+                        childCurrent: const SnakeController(),
+                        child: const GamePageSnake(),
                       ));
                 },
                 child: Container(

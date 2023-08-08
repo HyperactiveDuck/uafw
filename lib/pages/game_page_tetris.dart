@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'tetris.dart';
+import '../tetris.dart';
+import 'package:page_transition/page_transition.dart';
+import 'login.dart';
 
 class GamePageTetris extends StatefulWidget {
   const GamePageTetris({super.key});
@@ -10,6 +12,16 @@ class GamePageTetris extends StatefulWidget {
 
 class _GamePageTetrisState extends State<GamePageTetris> {
   String gameName = 'Tetris';
+
+  goHome() {
+    Navigator.pushReplacement(
+      context,
+      PageTransition(
+        type: PageTransitionType.fade,
+        child: const LoginPage(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +38,7 @@ class _GamePageTetrisState extends State<GamePageTetris> {
       ),
       body: Column(
         children: [
-          Expanded(
+          const Expanded(
             child: App(),
           ),
           Container(

@@ -3,11 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
-import 'package:uafw/allert.dart';
-import 'package:uafw/forgot_password.dart';
-import 'package:uafw/signup_screen.dart';
-import 'widgets/registiry_text_input_login.dart';
+import 'package:uafw/pages/allert.dart';
+import 'package:uafw/pages/daily_limit.dart';
+import 'package:uafw/pages/forgot_password.dart';
+import 'package:uafw/pages/signup_screen.dart';
+import '../widgets/registiry_text_input_login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -19,6 +21,11 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool isWithin16Hours(DateTime lastLogin) {
+    DateTime now = DateTime.now();
+    Duration timeDifference = now.difference(lastLogin);
+    return timeDifference.inHours < 16;
+  }
 
   @override
   void dispose() {
@@ -145,24 +152,73 @@ class _LoginPageState extends State<LoginPage> {
               try {
                 final String email = _getEmail();
                 final String password = _getPassword();
-                final authResult =
-                    await FirebaseAuth.instance.signInWithEmailAndPassword(
-                  email: email,
-                  password: password,
-                );
+                final authResult = await FirebaseAuth.instance
+                    .signInWithEmailAndPassword(
+                        email: email, password: password);
 
-                // Check if the user is signed in (authResult.user will be not null)
                 if (authResult.user != null) {
-                  // Navigate to the next screen after successful login
-                  // For example, replace 'NextScreen()' with the widget of the screen you want to navigate to.
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => GameInfo()),
-                  );
+                  String userId = authResult.user!.uid;
+
+                  // Get the user document from Firestore
+                  DocumentSnapshot userSnapshot = await FirebaseFirestore
+                      .instance
+                      .collection('kullanicilar')
+                      .doc(userId)
+                      .get();
+
+                  // Check if the document exists in Firestore
+                  if (userSnapshot.exists) {
+                    // Check if the 'lastLogin' field exists in the document
+                    Map<String, dynamic>? userData =
+                        userSnapshot.data() as Map<String, dynamic>?;
+                    if (userData != null && userData.containsKey('sonGiris')) {
+                      DateTime lastLogin = userData['sonGiris'].toDate();
+                      DateTime now = DateTime.now();
+
+                      // Calculate the time difference between now and the last login
+                      Duration timeDifference = now.difference(lastLogin);
+                      bool canLogin = timeDifference.inHours >= 16;
+
+                      if (canLogin) {
+                        // Navigate to the Allert page after successful login
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => GameInfo(),
+                          ),
+                        );
+                      } else {
+                        // Handle the case when the user needs to wait before logging in again
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TimeOut(),
+                          ),
+                        );
+                      }
+                    } else {
+                      // If the 'lastLogin' field does not exist in the document, the user is logging in for the first time.
+                      // Proceed with normal login and navigate to the Allert page.
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => GameInfo(),
+                        ),
+                      );
+                    }
+                  } else {
+                    // If the document does not exist in Firestore, the user is logging in for the first time.
+                    // Proceed with normal login and navigate to the Allert page.
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => GameInfo(),
+                      ),
+                    );
+                  }
                 } else {
                   // Handle the case when authResult.user is null (shouldn't happen in this case)
-                  _showErrorAlert(
-                      "Giriş Başarısız. Lütfen Bilgileriniziş deneyip tekrar girin.");
+                  _showErrorAlert("Login failed. Please try again.");
                 }
               } catch (e) {
                 debugPrint(e.toString());

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 import 'package:uafw/snakegame.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'login.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class GamePageSnake extends StatefulWidget {
@@ -15,16 +13,12 @@ class GamePageSnake extends StatefulWidget {
 class _GamePageSnakeState extends State<GamePageSnake> {
   String gameName = 'Yılan Oyunu';
 
-  Future<void> _signOutUser() {
-    return FirebaseAuth.instance.signOut();
-  }
-
   Future<void> saveScoreToFirestore(int score) async {
     try {
       // Get the current user's UID
       final User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        print('User is not logged in.');
+        debugPrint('User is not logged in.');
         return;
       }
       final String userUID = user.uid;
@@ -45,20 +39,9 @@ class _GamePageSnakeState extends State<GamePageSnake> {
       // Update the user's document with the new score
       await userDocument.update(scoreData);
     } catch (e) {
-      print('Error saving score to Firestore: $e');
+      debugPrint('Error saving score to Firestore: $e');
       // Handle the error if needed
     }
-  }
-
-  void _signOutAndNavigateToLoginPage(BuildContext context) {
-    _signOutUser().then((_) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginPage()),
-      );
-    }).catchError((error) {
-      debugPrint('Hata: $error');
-    });
   }
 
   @override
