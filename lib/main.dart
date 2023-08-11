@@ -17,6 +17,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      title: 'Umut Ocak Psikiloji Testi',
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         body: LoginPage(),

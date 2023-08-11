@@ -4,9 +4,7 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:page_transition/page_transition.dart';
-import 'package:uafw/pages/game_page_snake.dart';
-import 'package:uafw/pages/login.dart';
+import 'package:universal_html/html.dart' as html;
 
 void main() => runApp(const MyApp());
 
@@ -154,17 +152,10 @@ class SnakeGameState extends State<SnakeGame> {
           actions: <Widget>[
             TextButton(
               child: const Text('Skoru Yükle ve Çıkış Yap'),
-              onPressed: () {
-                saveScoreToFirestore((snake.length - 2) * 100);
-                gameEnded =
-                    false; // Reset the gameEnded flag when the user closes the alert
-                Navigator.push(
-                    context,
-                    PageTransition(
-                      type: PageTransitionType.fade,
-                      childCurrent: const GamePageSnake(),
-                      child: const LoginPage(),
-                    )); // Close the alert
+              onPressed: () async {
+                await saveScoreToFirestore((snake.length - 2) * 100);
+                gameEnded = false;
+                html.window.location.reload();
               },
             ),
           ],

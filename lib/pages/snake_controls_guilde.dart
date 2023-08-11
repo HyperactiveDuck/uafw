@@ -22,7 +22,7 @@ class _SnakeControllerState extends State<SnakeController> {
               Title(
                   color: Colors.black,
                   child: const Text(
-                    'Tetris Oyunu',
+                    'Yılan Oyunu',
                     style: TextStyle(
                         fontSize: 50,
                         color: Colors.white,

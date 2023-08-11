@@ -265,7 +265,11 @@ class RegisterPageState extends State<RegisterPage> {
                       _clearFormFields(_passwordController);
                     } catch (e) {
                       // Handle errors during signup
-                      _showErrorAlert(context, e.toString());
+                      _showErrorAlert(
+                          context, "Hesap oluşturulamadı\n Hata Kodu : $e");
+                      _clearFormFields(_emailController);
+                      _clearFormFields(_passwordController);
+                      _clearFormFields(_nameController);
                     }
                   }
                 : null, // Set to null to disable the button when checkbox is not checked
