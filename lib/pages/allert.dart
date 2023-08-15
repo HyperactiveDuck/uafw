@@ -22,6 +22,24 @@ class _GameInfoState extends State<GameInfo> {
         .set({'sonGiris': loginTime}, SetOptions(merge: true));
   }
 
+  Future<void> registerFirstLoginTime() async {
+    // Check if the user document already exists
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance
+        .collection('kullanicilar')
+        .doc(widget.uid)
+        .get();
+
+    // If the user document exists and "ilkGiris" field is not set, then set it
+    if (userDoc.exists &&
+        (userDoc.data() as Map<String, dynamic>)['ilkGiris'] == null) {
+      DateTime firstLoginTime = DateTime.now();
+      await FirebaseFirestore.instance
+          .collection('kullanicilar')
+          .doc(widget.uid)
+          .set({'ilkGiris': firstLoginTime}, SetOptions(merge: true));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,6 +64,7 @@ class _GameInfoState extends State<GameInfo> {
               onPressed: () async {
                 await fetchGameAssignment(context, widget.uid);
                 await registerLoginTime();
+                await registerFirstLoginTime();
               },
               child: Container(
                 decoration: BoxDecoration(

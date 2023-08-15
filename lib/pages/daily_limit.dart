@@ -17,7 +17,7 @@ class _TimeOutState extends State<TimeOut> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Hesabınıza yalnızca her 16 saatte bir giriş yapabilirsiniz. Lütfen daha sonra tekrar deneyiniz.',
+              'Bugün ki oyun hakkınız doldu. Lütfen daha sonra tekrar deneyiniz.',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,

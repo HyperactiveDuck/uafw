@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
-import 'package:uafw/pages/game_page_tetris.dart';
+
+import 'package:uafw/tetris.dart';
 
 class TetrisController extends StatefulWidget {
   const TetrisController({super.key});
@@ -47,7 +48,7 @@ class TetrisControllerState extends State<TetrisController> {
                       PageTransition(
                         type: PageTransitionType.fade,
                         childCurrent: const TetrisController(),
-                        child: const GamePageTetris(),
+                        child: const App(),
                       ));
                 },
                 child: Container(

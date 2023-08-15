@@ -445,8 +445,6 @@ class Board extends ChangeNotifier {
         move(const Vector(-1, 0));
       } else if (event.logicalKey == LogicalKeyboardKey.arrowRight) {
         move(const Vector(1, 0));
-      } else if (event.logicalKey == LogicalKeyboardKey.arrowUp) {
-        hold();
       } else if (event.logicalKey == LogicalKeyboardKey.arrowDown) {
         move(const Vector(0, -1));
       } else if (event.logicalKey == LogicalKeyboardKey.keyA) {

@@ -29,8 +29,8 @@ class SnakeGame extends StatefulWidget {
 class SnakeGameState extends State<SnakeGame> {
   static int puan = 0;
 
-  final int squaresPerRow = 20;
-  final int squaresPerCol = 40;
+  final int squaresPerRow = 40;
+  final int squaresPerCol = 20;
   final fontStyle = const TextStyle(color: Colors.white, fontSize: 20);
   final randomGen = Random();
 
@@ -263,43 +263,45 @@ class SnakeGameState extends State<SnakeGame> {
                     }
                     return KeyEventResult.ignored;
                   },
-                  child: GridView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: squaresPerRow,
-                    ),
-                    itemCount: squaresPerRow * squaresPerCol,
-                    itemBuilder: (BuildContext context, int index) {
-                      Color? color;
-                      var x = index % squaresPerRow;
-                      var y = (index / squaresPerRow).floor();
+                  child: Center(
+                    child: GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: squaresPerRow,
+                      ),
+                      itemCount: squaresPerRow * squaresPerCol,
+                      itemBuilder: (BuildContext context, int index) {
+                        Color? color;
+                        var x = index % squaresPerRow;
+                        var y = (index / squaresPerRow).floor();
 
-                      bool isSnakeBody = false;
-                      for (var pos in snake) {
-                        if (pos[0] == x && pos[1] == y) {
-                          isSnakeBody = true;
-                          break;
+                        bool isSnakeBody = false;
+                        for (var pos in snake) {
+                          if (pos[0] == x && pos[1] == y) {
+                            isSnakeBody = true;
+                            break;
+                          }
                         }
-                      }
 
-                      if (snake.first[0] == x && snake.first[1] == y) {
-                        color = Colors.green;
-                      } else if (isSnakeBody) {
-                        color = Colors.green[200];
-                      } else if (food[0] == x && food[1] == y) {
-                        color = Colors.red;
-                      } else {
-                        color = Colors.grey[800];
-                      }
+                        if (snake.first[0] == x && snake.first[1] == y) {
+                          color = Colors.green;
+                        } else if (isSnakeBody) {
+                          color = Colors.green[200];
+                        } else if (food[0] == x && food[1] == y) {
+                          color = Colors.red;
+                        } else {
+                          color = Colors.grey[800];
+                        }
 
-                      return Container(
-                        margin: const EdgeInsets.all(1),
-                        decoration: BoxDecoration(
-                          color: color,
-                          shape: BoxShape.circle,
-                        ),
-                      );
-                    },
+                        return Container(
+                          margin: const EdgeInsets.all(1),
+                          decoration: BoxDecoration(
+                            color: color,
+                            shape: BoxShape.circle,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),

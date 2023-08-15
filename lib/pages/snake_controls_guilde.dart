@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'game_page_snake.dart';
+import 'package:uafw/snakegame.dart';
 import 'package:page_transition/page_transition.dart';
 
 class SnakeController extends StatefulWidget {
@@ -47,7 +47,7 @@ class _SnakeControllerState extends State<SnakeController> {
                       PageTransition(
                         type: PageTransitionType.fade,
                         childCurrent: const SnakeController(),
-                        child: const GamePageSnake(),
+                        child: const MyApp(),
                       ));
                 },
                 child: Container(
