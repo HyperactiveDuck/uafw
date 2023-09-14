@@ -120,14 +120,35 @@ class Board extends ChangeNotifier {
       final Map<String, dynamic>? existingData =
           userSnapshot.data() as Map<String, dynamic>?;
 
+      // Calculate the day difference between currentDate and ilkGiris
+      final Timestamp ilkGirisTimestamp = existingData?['ilkGiris'];
+      final int dayDifference =
+          currentDate.toDate().difference(ilkGirisTimestamp.toDate()).inDays;
+
       // Create an empty map if there's no existing data
       final Map<String, dynamic> existingScores =
           existingData?['Tarih ve Skor'] ?? {};
 
-      // Add the new score to the existing scores map
-      existingScores[currentDate.toDate().toString()] = clearedLines * 100;
+      // Create a new map for the day's scores if it doesn't exist
+      final Map<String, dynamic> dayScores =
+          existingScores['Day $dayDifference'] ?? {};
 
-      // Update the user's document with the updated scores map
+      // Calculate the total score for the day's scores map
+      int totalScore = dayScores['Total Score'] ?? 0;
+      totalScore += clearedLines * 100;
+
+      // Check if the current score is higher than the highest score for the day
+      if (clearedLines * 100 > (dayScores['Highest Score'] ?? 0)) {
+        dayScores['Highest Score'] = clearedLines * 100;
+      }
+
+      // Update the day's scores map with the new score and total score
+      dayScores[currentDate.toDate().toString()] = clearedLines * 100;
+      dayScores['Total Score'] = totalScore;
+
+      // Update the user's document with the updated day's scores map
+      existingScores['Day $dayDifference'] = dayScores;
+
       await userDocument.update({
         "Tarih ve Skor": existingScores,
       });
@@ -142,7 +163,8 @@ class Board extends ChangeNotifier {
       move(const Vector(0, -1));
     }
     if (isBlockOut()) {
-      showGameOverDialog(context, clearedLines);
+      saveScoreToFirestore(clearedLines);
+      reset();
     } else if (!canMove(const Vector(0, -1)) && isLockDelayExpired()) {
       merge();
       clearRows();

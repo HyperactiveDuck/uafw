@@ -56,7 +56,7 @@ class _NoGameState extends State<NoGame> {
                 width: 150,
                 padding: const EdgeInsets.all(10),
                 child: const Text(
-                  'Devam Et',
+                  'Çıkış Yap',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30,

@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: SnakeGame(),
     );
   }
@@ -62,6 +63,9 @@ class SnakeGameState extends State<SnakeGame> {
 
     isPlaying = true;
 
+    // Cancel the previous timer if it exists
+    timer?.cancel();
+
     // Start the countdown timer
     timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
       setState(() {
@@ -78,8 +82,29 @@ class SnakeGameState extends State<SnakeGame> {
       moveSnake();
       if (checkGameOver()) {
         timer.cancel();
-        endGame();
+        saveScoreToFirestore((snake.length - 2) * 100);
+        resetGame();
       }
+    });
+  }
+
+  void resetGame() {
+    // Reset game-related variables and UI
+    setState(() {
+      snake = [
+        // Snake head
+        [(squaresPerRow / 2).floor(), (squaresPerCol / 2).floor()]
+      ];
+
+      snake.add([snake.first[0], snake.first[1] + 1]); // Snake body
+
+      createFood();
+
+      direction = 'up';
+      isPlaying = false;
+      // Reset the time
+      gameEnded = false; // Reset the game-ended flag
+      SnakeGameState.puan = 0; // Reset the score
     });
   }
 
@@ -145,15 +170,14 @@ class SnakeGameState extends State<SnakeGame> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Oyun Bitti'),
-          content: Text(
-            'Skor: ${(snake.length - 2) * 100}',
-            style: const TextStyle(fontSize: 20),
+          content: const Text(
+            'Süreniz Doldu!',
+            style: TextStyle(fontSize: 20),
           ),
           actions: <Widget>[
             TextButton(
               child: const Text('Skoru Yükle ve Çıkış Yap'),
               onPressed: () async {
-                await saveScoreToFirestore((snake.length - 2) * 100);
                 gameEnded = false;
                 html.window.location.reload();
               },
@@ -187,14 +211,37 @@ class SnakeGameState extends State<SnakeGame> {
       final Map<String, dynamic>? existingData =
           userSnapshot.data() as Map<String, dynamic>?;
 
+      // Calculate the day difference between currentDate and ilkGiris
+      final Timestamp ilkGirisTimestamp = existingData?['ilkGiris'];
+      final int dayDifference =
+          currentDate.toDate().difference(ilkGirisTimestamp.toDate()).inDays;
+
       // Create an empty map if there's no existing data
       final Map<String, dynamic> existingScores =
           existingData?['Tarih ve Skor'] ?? {};
 
-      // Add the new score to the existing scores map
-      existingScores[currentDate.toDate().toString()] = score;
+      // Create a new map for the day's scores if it doesn't exist
+      final Map<String, dynamic> dayScores =
+          existingScores['Gün $dayDifference'] ?? {};
 
-      // Update the user's document with the updated scores map
+      // Calculate the total score for the day's scores map
+      int totalScore = dayScores['Total Score'] ?? 0;
+      totalScore += score;
+
+      // Check if the current score is higher than the previously recorded "Highest Score" for the day and update it accordingly
+      if (score > (dayScores['Highest Score'] ?? 0)) {
+        dayScores['Highest Score'] = score;
+      }
+
+      // Add the new score to the day's scores map with the current timestamp
+      dayScores[currentDate.toDate().toString()] = score;
+
+      // Update the day's total score with the new total score
+      dayScores['Total Score'] = totalScore;
+
+      // Update the user's document with the updated day's scores map
+      existingScores['Gün $dayDifference'] = dayScores;
+
       await userDocument.update({
         "Tarih ve Skor": existingScores,
       });

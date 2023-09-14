@@ -30,7 +30,7 @@ class TetrisControllerState extends State<TetrisController> {
                         fontWeight: FontWeight.bold),
                   )),
               const Text(
-                'Blokları sağ ve sol yön tuşlatıyla sağa ve sola oynatabilirsiniz\nKlavyenizdeki  "A" tuşu bloğu sağa , "D" tuşu bloğu sola çevirecektir\n Aşağı yön tuşu blokların daha hızlı inmesini sağlar\nKlavyenizdeki boşluk tuşu blokların tek hamlede yere inmesini sağlar.',
+                'Blokları sağ ve sol yön tuşlatıyla sağa ve sola oynatabilirsiniz\nKlavyenizdeki  "A" tuşu bloğu sola , "D" tuşu bloğu sağa çevirecektir\n Aşağı yön tuşu blokların daha hızlı inmesini sağlar\nKlavyenizdeki boşluk tuşu blokların tek hamlede yere inmesini sağlar.\nOyun süre bitene kadar yansanız bile tekrar başlayacaktır, bütün skorlar kaydedilecektir.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
