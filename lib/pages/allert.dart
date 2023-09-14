@@ -6,7 +6,7 @@ import '../widgets/fetch_game.dart';
 class GameInfo extends StatefulWidget {
   GameInfo({super.key});
 
-  String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+  final String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
 
   @override
   State<GameInfo> createState() => _GameInfoState();

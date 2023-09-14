@@ -5,7 +5,7 @@ import 'login.dart';
 class NoGame extends StatefulWidget {
   NoGame({super.key});
 
-  String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
+  final String uid = FirebaseAuth.instance.currentUser?.uid ?? '';
 
   @override
   State<NoGame> createState() => _NoGameState();
