@@ -194,13 +194,14 @@ class Board extends ChangeNotifier {
   }
 
   void startTimer() {
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       if (remainingTimeInSeconds > 0) {
         remainingTimeInSeconds--;
         notifyListeners();
       } else {
         timer.cancel();
-        showGameOverDialog(context, clearedLines);
+        await saveScoreToFirestore(clearedLines);
+        html.window.location.reload();
       }
     });
   }

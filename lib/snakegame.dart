@@ -67,14 +67,15 @@ class SnakeGameState extends State<SnakeGame> {
     timer?.cancel();
 
     // Start the countdown timer
-    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
+    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) async {
       setState(() {
         remainingTime--;
       });
 
       if (remainingTime <= 0) {
         t.cancel();
-        endGame();
+        await saveScoreToFirestore((snake.length - 2) * 100);
+        html.window.location.reload();
       }
     });
 

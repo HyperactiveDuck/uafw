@@ -49,7 +49,7 @@ class _GameInfoState extends State<GameInfo> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             const Text(
-              'Butona tıkladığınızda karşınza seçilmiş olan 2 oyundan biri çıkacak.\n"Başla" butonuna tıkladığınızda oyun başlayacak.\nOyunu her gün yalnızca 15 dakika kadar oynayabilirsiniz.\nOyundaki skorlarınız sistem tarafından kaydedilecek ve deney için kullanılacaktır',
+              'Butona tıkladığınızda karşınıza seçilmiş olan 2 oyundan biri çıkacak.\n"Başla" butonuna tıkladığınızda oyun başlayacak.\nOyunu her gün yalnızca 15 dakika kadar oynayabilirsiniz.\nSüre bitiminden sonra tarayıcı sayfanız kendini yenileyecek ve hesabınızdan çıkış yapılacak.\nOyundaki skorlarınız sistem tarafından kaydedilecek ve deney için kullanılacaktır',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
