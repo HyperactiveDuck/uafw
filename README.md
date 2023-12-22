@@ -13,6 +13,15 @@ Users scores on these 2 games which are tetris and snake are stored live and org
 
 The Example on the picture for usertetris says Day 30, since the score has been entered 30 days after the accounts first login. For that day it has the first score and it's timestamp , highest score recorded that day and the sum of all the scores the user recorded that day.
 
+![UAFW_1](https://github.com/HyperactiveDuck/uafw/assets/133441799/4fbafd60-70df-4a86-bb92-c0d7a883c0cb)
+
+
+![UAFW_2](https://github.com/HyperactiveDuck/uafw/assets/133441799/b70167b3-6136-4a67-b7b6-6a27abb88db6)
+
+![UAFW_3](https://github.com/HyperactiveDuck/uafw/assets/133441799/1a0253e8-8de3-4d1b-b300-ff53be647bae)
+
+
+
 
 The Tetris Games is by https://github.com/andnexus
 
