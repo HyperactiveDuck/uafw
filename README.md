@@ -1,3 +1,8 @@
+When I made this webapp only me and god knew how it worked. Now only god knows. To whoever it is that's tasked with maintining this shitwhole of a repo, Godspeed soldier, for only he can help you now
+
+#Wasted Hours Trying To Optimize The Server Calls: 34
+
+
 UAFW is a flutter web project that uses firebase as backend. It's used for a non-profit academic psychological test conducted by Umut Ocak. 
 
 It uses firebase auth for user logins, each users gets a document with their uids when their account gets created.
